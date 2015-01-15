@@ -16,17 +16,33 @@ module.exports = function (templates) {
             next();
         }
         function end () {
+            var self = this;
             var src = Buffer.concat(bufs);
             var rep = templates[key];
             if (isarray(rep)) {
                 for (var i = 0; i < rep.length; i++) {
                     this.push(hyperglue(src, rep[i]).outerHTML);
                 }
+                this.push(null);
+            }
+            else if (isstream(rep)) {
+                rep.pipe(through.obj(
+                    function (row, enc, next) {
+                        self.push(hyperglue(src, row).outerHTML);
+                        next();
+                    },
+                    function () {
+                        self.push(null);
+                    }
+                ));
             }
             else if (typeof rep === 'object') {
-                this.push(hyperglue(src, rep).outerHTML);
+                self.push(hyperglue(src, rep).outerHTML);
+                self.push(null);
             }
-            this.push(null);
+            else {
+                // ...
+            }
         }
     });
     return tr;
