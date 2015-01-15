@@ -21,9 +21,9 @@ module.exports = function (templates) {
             var rep = templates[key];
             if (isarray(rep)) {
                 for (var i = 0; i < rep.length; i++) {
-                    this.push(hyperglue(src, rep[i]).outerHTML);
+                    self.push(hyperglue(src, rep[i]).outerHTML);
                 }
-                this.push(null);
+                self.push(null);
             }
             else if (isstream(rep)) {
                 rep.pipe(through.obj(
@@ -41,7 +41,8 @@ module.exports = function (templates) {
                 self.push(null);
             }
             else {
-                // ...
+                self.push(rep);
+                self.push(null);
             }
         }
     });
