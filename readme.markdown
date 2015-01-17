@@ -4,6 +4,8 @@ build templates with ordinary html for node and browsers
 
 Write plain html and use css selectors to modify the html.
 
+[![build status](https://secure.travis-ci.org/substack/html-template.png)](http://travis-ci.org/substack/html-template)
+
 # example
 
 Put `template=` attributes on the elements you want to turn into templates.
