@@ -3,7 +3,8 @@ var inherits = require('inherits');
 var concat = require('concat-stream');
 var through = require('through2');
 var Duplex = require('readable-stream').Duplex;
-var fs = require('fs');
+var hyperglue = require('hyperglue');
+var isbuffer = require('buffer').Buffer.isBuffer;
 
 module.exports = Templates;
 inherits(Templates, Duplex);
@@ -61,7 +62,13 @@ Templates.prototype.template = function (name) {
             elem.removeAttribute('template');
         });
         Object.keys(row).forEach(function (key) {
-            tr.createWriteStream(key).end(row[key]);
+            var value = row[key];
+            if (typeof value === 'string' || isbuffer(value)) {
+                tr.createWriteStream(key).end(value);
+            }
+            else {
+                //tr.createWriteStream(key).end(value);
+            }
         });
         tr.pipe(s, { end: false });
         tr.once('end', next);
