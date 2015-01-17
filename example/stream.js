@@ -1,10 +1,12 @@
 var template = require('../');
 var fs = require('fs');
-var path = require('path');
 
-var html = read('skills.html').pipe(template());
+var html = template();
 var skills = html.template('skill');
-html.pipe(process.stdout);
+fs.createReadStream(__dirname + '/static/index.html')
+    .pipe(html)
+    .pipe(process.stdout)
+;
 
 skills.write({
     '[key=name]': 'macaroni pictures',
@@ -19,7 +21,3 @@ skills.write({
     '[key=level]': '50%'
 });
 skills.end();
-
-function read (file) {
-    return fs.createReadStream(path.join(__dirname, file));
-}
