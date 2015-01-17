@@ -1,7 +1,7 @@
 {
   "name": "html-template",
   "version": "1.0.0",
-  "description": "pure html templates for node and the browser",
+  "description": "build templates with ordinary html for node and browsers",
   "browser": "browser.js",
   "main": "index.js",
   "dependencies": {
