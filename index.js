@@ -1,5 +1,4 @@
 var trumpet = require('trumpet');
-var isarray = require('isarray');
 var inherits = require('inherits');
 var concat = require('concat-stream');
 var through = require('through2');
