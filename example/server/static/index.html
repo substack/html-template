@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>wow</title>
+    <style>
+      table.skill th, table.skill td {
+        border: 1px solid gray;
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>list of skills</h1>
+    <table class="skill">
+      <tr>
+        <th>skill name</th>
+        <th>skill level</th>
+      </tr>
+      <tr template="skill">
+        <td key="name"></td>
+        <td key="level"></td>
+      </tr>
+    </table>
+    <script src="bundle.js"></script>
+  </body>
+</html>

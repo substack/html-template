@@ -3,7 +3,7 @@ var fs = require('fs');
 
 var html = template();
 var skills = html.template('skill');
-fs.createReadStream(__dirname + '/static/index.html')
+fs.createReadStream(__dirname + '/skills.html')
     .pipe(html)
     .pipe(process.stdout)
 ;
