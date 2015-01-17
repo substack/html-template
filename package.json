@@ -1,6 +1,6 @@
 {
   "name": "html-template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "build templates with ordinary html for node and browsers",
   "browser": "browser.js",
   "main": "index.js",
@@ -10,7 +10,7 @@
     "hyperstream": "^1.2.2",
     "inherits": "^2.0.1",
     "readable-stream": "^1.0.33",
-    "shallow-copy": "0.0.1",
+    "shallow-copy": "~0.0.1",
     "through2": "~0.6.3",
     "trumpet": "^1.7.0"
   },
