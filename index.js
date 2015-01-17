@@ -17,6 +17,12 @@ function Templates () {
     this._trumpet.on('readable', function () {
         self._read();
     });
+    this.on('finish', function () {
+        self._trumpet.end();
+    });
+    this._trumpet.on('end', function () {
+        self.push(null);
+    });
 }
 
 Templates.prototype._write = function (buf, enc, next) {
