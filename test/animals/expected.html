@@ -1,0 +1,26 @@
+<html>
+  <body>
+    <h1>list of animals</h1>
+    <table class="animals">
+      <tr>
+        <th>picture</th>
+        <th>name</th>
+        <th>favorite color</th>
+      </tr>
+      <tr template="animal" style="display:none">
+        <td key="picture"><img></td>
+        <td key="name"></td>
+        <td key="favoriteColor"></td>
+      </tr><tr>
+        <td key="picture"><img src="https://i.imgur.com/bDuXnL7.jpg"></td>
+        <td key="name">Husky</td>
+        <td key="favoriteColor" style="background:blue">Blue</td>
+      </tr><tr>
+        <td key="picture"><img src="https://i.imgur.com/ksHrrso.jpg"></td>
+        <td key="name">Polar Bear</td>
+        <td key="favoriteColor" style="background:#fafdff">Snow</td>
+      </tr>
+    </table>
+    <script src="bundle.js"></script>
+  </body>
+</html>
