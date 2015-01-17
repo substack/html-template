@@ -1,52 +1,68 @@
 var trumpet = require('trumpet');
-var hyperglue = require('hyperglue');
-var through = require('through2');
 var isarray = require('isarray');
+var inherits = require('inherits');
+var concat = require('concat-stream');
+var through = require('through2');
+var Duplex = require('readable-stream').Duplex;
+var fs = require('fs');
 
-module.exports = function (templates) {
-    var tr = trumpet();
-    var src = {};
-    Object.keys(templates).forEach(function (key) {
-        var r = tr.createStream(key, { outer: true });
-        var bufs = [];
-        r.pipe(through(write, end)).pipe(r);
-        
-        function write (buf, enc, next) {
-            bufs.push(buf);
-            next();
-        }
-        function end () {
-            var self = this;
-            var src = Buffer.concat(bufs);
-            var rep = templates[key];
-            if (isarray(rep)) {
-                for (var i = 0; i < rep.length; i++) {
-                    self.push(hyperglue(src, rep[i]).outerHTML);
-                }
-                self.push(null);
-            }
-            else if (isstream(rep)) {
-                rep.pipe(through.obj(
-                    function (row, enc, next) {
-                        self.push(hyperglue(src, row).outerHTML);
-                        next();
-                    },
-                    function () {
-                        self.push(null);
-                    }
-                ));
-            }
-            else if (typeof rep === 'object') {
-                self.push(hyperglue(src, rep).outerHTML);
-                self.push(null);
-            }
-            else {
-                self.push(rep);
-                self.push(null);
-            }
-        }
+module.exports = Templates;
+inherits(Templates, Duplex);
+
+function Templates () {
+    if (!(this instanceof Templates)) return new Templates;
+    var self = this;
+    Duplex.call(this);
+    this._trumpet = trumpet();
+    this._trumpet.on('readable', function () {
+        self._read();
     });
-    return tr;
+}
+
+Templates.prototype._write = function (buf, enc, next) {
+    this._trumpet._write(buf, enc, next);
+};
+
+Templates.prototype._read = function () {
+    var buf;
+    while ((buf = this._trumpet.read()) !== null) {
+        this.push(buf);
+    }
+};
+
+Templates.prototype.template = function (name) {
+    var key = '[template="' + name + '"]';
+    var s = this._trumpet.createStream(key, { outer: true });
+    
+    var html = null;
+    s.pipe(concat(function (body) {
+        html = body;
+        s.write(body.toString('utf8')
+            .replace(/>/, ' style="display:none">')
+        );
+        if (row_) write(row_, null, next_);
+    }));
+    var row_, next_;
+    return through.obj(write, end);
+    
+    function write (row, enc, next) {
+        if (html === null) {
+            row_ = row;
+            next_ = next;
+            return;
+        }
+        var tr = trumpet();
+        tr.select('*', function (elem) {
+            elem.removeAttribute('template');
+        });
+        Object.keys(row).forEach(function (key) {
+            tr.createWriteStream(key).end(row[key]);
+        });
+        tr.pipe(s, { end: false });
+        tr.once('end', next);
+        tr.end(html);
+    }
+    function end () { s.end() }
 };
 
 function isstream (stream) {
