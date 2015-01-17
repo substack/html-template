@@ -5,6 +5,8 @@ var through = require('through2');
 var Duplex = require('readable-stream').Duplex;
 var hyperglue = require('hyperglue');
 var isbuffer = require('buffer').Buffer.isBuffer;
+var copy = require('shallow-copy');
+var hyperstream = require('hyperstream');
 
 module.exports = Templates;
 inherits(Templates, Duplex);
@@ -42,11 +44,16 @@ Templates.prototype.template = function (name) {
     
     var html = null;
     s.pipe(concat(function (body) {
-        html = body;
         s.write(body.toString('utf8')
             .replace(/>/, ' style="display:none">')
         );
-        if (row_) write(row_, null, next_);
+        
+        var h = hyperstream({ '*:first': { template: undefined } });
+        h.pipe(concat(function (hbody) {
+            html = hbody;
+            if (row_) write(row_, null, next_);
+        }));
+        h.end(body);
     }));
     var row_, next_;
     return through.obj(write, end);
@@ -57,22 +64,11 @@ Templates.prototype.template = function (name) {
             next_ = next;
             return;
         }
-        var tr = trumpet();
-        tr.select('*', function (elem) {
-            elem.removeAttribute('template');
-        });
-        Object.keys(row).forEach(function (key) {
-            var value = row[key];
-            if (typeof value === 'string' || isbuffer(value)) {
-                tr.createWriteStream(key).end(value);
-            }
-            else {
-                //tr.createWriteStream(key).end(value);
-            }
-        });
-        tr.pipe(s, { end: false });
-        tr.once('end', next);
-        tr.end(html);
+        var params = copy(row);
+        var hs = hyperstream(params);
+        hs.pipe(s, { end: false });
+        hs.once('end', next);
+        hs.end(html);
     }
     function end () { s.end() }
 };
