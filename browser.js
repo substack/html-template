@@ -5,7 +5,7 @@ module.exports = function () {
     
     function template (name) {
         var t = document.querySelector('[template="' + name + '"]');
-        return { create: create, write: write };
+        return { create: create, write: write, end: end };
         
         function create (row) {
             var e = t.cloneNode(true);
@@ -17,5 +17,6 @@ module.exports = function () {
             var e = create(row);
             t.parentNode.appendChild(e);
         }
+        function end () {}
     }
 };
