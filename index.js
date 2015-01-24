@@ -38,16 +38,17 @@ Templates.prototype._read = function () {
     }
 };
 
-Templates.prototype.template = function (name) {
+Templates.prototype.template = function (name, noDuplicate) {
     var key = '[template="' + name + '"]';
     var s = this._trumpet.createStream(key, { outer: true });
-    
+
     var html = null;
     s.pipe(concat(function (body) {
+      if(!noDuplicate){
         s.write(body.toString('utf8')
             .replace(/>/, ' style="display:none">')
         );
-        
+      }
         var h = hyperstream({ '*:first': { template: undefined } });
         h.pipe(concat(function (hbody) {
             html = hbody;
@@ -57,7 +58,7 @@ Templates.prototype.template = function (name) {
     }));
     var row_, next_;
     return through.obj(write, end);
-    
+
     function write (row, enc, next) {
         if (html === null) {
             row_ = row;
