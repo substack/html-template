@@ -125,7 +125,11 @@ attributes and produces html output with expanded template data.
 
 ## var t = html.template(name)
 
-Load a template `t` by its template `name` in the html.
+Load a template `t` by its template `name` in the html. This will render the original template and the compiled template, with the original set with style="display:none;"
+
+## var t = html.template(name, true)
+
+Load a template `t` by its template `name` in the html, disabling the rendering of the original template.
 
 ## t.write(row)
 
