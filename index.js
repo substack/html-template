@@ -43,7 +43,7 @@ Templates.prototype.template = function (name, opts) {
     var key = '[template="' + name + '"]';
     var s = this._trumpet.createStream(key, { outer: true });
 
-    var html = null;
+    var html = null, pending = 2;
     s.pipe(concat(function (body) {
         if (opts.include !== false) {
             s.write(body.toString('utf8')
@@ -56,6 +56,7 @@ Templates.prototype.template = function (name, opts) {
             if (row_) write(row_, null, next_);
         }));
         h.end(body);
+        end();
     }));
     var row_, next_;
     return through.obj(write, end);
@@ -72,7 +73,7 @@ Templates.prototype.template = function (name, opts) {
         hs.once('end', next);
         hs.end(html);
     }
-    function end () { s.end() }
+    function end () { if (-- pending === 0) s.end() }
 };
 
 function isstream (stream) {
