@@ -123,13 +123,16 @@ Create a new html template stream `html` that takes html input with `template`
 attributes and produces html output with expanded template data.
 
 
-## var t = html.template(name)
+## var t = html.template(name, opts)
 
-Load a template `t` by its template `name` in the html. This will render the original template and the compiled template, with the original set with style="display:none;"
+Load a template `t` by its template `name` in the html.
 
-## var t = html.template(name, true)
+Optionally:
 
-Load a template `t` by its template `name` in the html, disabling the rendering of the original template.
+* `opts.include` - when `false`, do not include the original template in the
+html output. Otherwise include the original template with
+`style="display:none"` so the template can be loaded in the browser to create
+additional output.
 
 ## t.write(row)
 

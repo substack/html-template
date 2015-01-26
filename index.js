@@ -38,17 +38,18 @@ Templates.prototype._read = function () {
     }
 };
 
-Templates.prototype.template = function (name, noDuplicate) {
+Templates.prototype.template = function (name, opts) {
+    if (!opts) opts = {};
     var key = '[template="' + name + '"]';
     var s = this._trumpet.createStream(key, { outer: true });
 
     var html = null;
     s.pipe(concat(function (body) {
-      if(!noDuplicate){
-        s.write(body.toString('utf8')
-            .replace(/>/, ' style="display:none">')
-        );
-      }
+        if (opts.include !== false) {
+            s.write(body.toString('utf8')
+                .replace(/>/, ' style="display:none">')
+            );
+        }
         var h = hyperstream({ '*:first': { template: undefined } });
         h.pipe(concat(function (hbody) {
             html = hbody;
