@@ -9,7 +9,7 @@
     "hyperglue": "^2.0.0",
     "hyperstream": "^1.2.2",
     "inherits": "^2.0.1",
-    "readable-stream": "^1.0.33",
+    "readable-stream": "~1.0.33",
     "shallow-copy": "~0.0.1",
     "through2": "~0.6.3",
     "trumpet": "^1.7.0"
