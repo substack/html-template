@@ -1,6 +1,6 @@
 {
   "name": "html-template",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "build templates with ordinary html for node and browsers",
   "browser": "browser.js",
   "main": "index.js",
